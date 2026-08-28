@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      {{if bodyFontFile}}
+      @font-face {
+        font-family: "BiliCardBodyCustom";
+        src: url("{{@ pluResPath}}fonts/{{@ bodyFontUrl}}") format("{{bodyFontFormat}}");
+        font-display: swap;
+      }
+      {{/if}}
+      {{if titleFontFile}}
+      @font-face {
+        font-family: "BiliCardTitleCustom";
+        src: url("{{@ pluResPath}}fonts/{{@ titleFontUrl}}") format("{{titleFontFormat}}");
+        font-display: swap;
+      }
+      {{/if}}
+
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; background: transparent; }
+
+      #container {
+        width: {{cardWidth}}px;
+        container-type: inline-size;
+        padding: 1.55cqw;
+        color: #251e31;
+        font-family: {{if bodyFontFile}}"BiliCardBodyCustom"{{else}}{{bodyFontFamily}}{{/if}};
+        font-weight: {{bodyFontWeight}};
+        background:
+          radial-gradient(circle at 4% 5%, rgba(173, 143, 255, 0.72), transparent 31%),
+          radial-gradient(circle at 98% 96%, rgba(255, 184, 195, 0.74), transparent 36%),
+          linear-gradient(145deg, #d7c8ff 0%, #f6ddeb 56%, #ffe4db 100%);
+        overflow: hidden;
+      }
+
+      .shadow {
+        box-shadow:
+          0 0.38cqw 0.95cqw rgba(67, 42, 91, 0.22),
+          inset 0 0 0 0.18cqw rgba(255, 255, 255, 0.78);
+      }
+
+      .header {
+        position: relative;
+        height: 14.5cqw;
+        overflow: hidden;
+        border-radius: 1.45cqw;
+        background: linear-gradient(105deg, #9f89df, #c9b8ed 58%, #dcccec);
+      }
+
+      .header-bg {
+        position: absolute;
+        inset: -4cqw;
+        width: calc(100% + 8cqw);
+        height: calc(100% + 8cqw);
+        object-fit: cover;
+        filter: blur(1.8cqw) saturate(0.72);
+        opacity: 0.31;
+      }
+
+      .header::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, rgba(133, 103, 205, 0.62), rgba(221, 207, 240, 0.57));
+      }
+
+      .profile {
+        position: absolute;
+        z-index: 2;
+        inset: 1.15cqw auto auto 2.4cqw;
+        display: flex;
+        height: 12.2cqw;
+        align-items: center;
+        gap: 1.8cqw;
+      }
+
+      .avatar-wrap {
+        width: 11.2cqw;
+        height: 11.2cqw;
+        overflow: hidden;
+        border: 0.38cqw solid #fff;
+        border-radius: 50%;
+        background: #e9e1ff;
+        box-shadow: 0 0.35cqw 0.8cqw rgba(50, 30, 82, 0.35);
+      }
+
+      .avatar { width: 100%; height: 100%; object-fit: cover; }
+      .avatar-fallback {
+        width: 100%; height: 100%; display: grid; place-items: center;
+        color: #7254b1; font-size: 4.8cqw; font-weight: 900;
+      }
+
+      .author-copy {
+        color: #fff;
+        text-shadow: 0 0.25cqw 0.35cqw rgba(78, 48, 120, 0.62);
+      }
+
+      .author-name {
+        max-width: 59cqw;
+        overflow: hidden;
+        font-family: {{if titleFontFile}}"BiliCardTitleCustom"{{else}}{{titleFontFamily}}{{/if}};
+        font-size: 4.7cqw;
+        font-weight: {{titleFontWeight}};
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .publish-time { margin-top: 0.7cqw; font-size: 3.2cqw; font-weight: 800; }
+
+      .qr-wrap {
+        position: absolute;
+        z-index: 3;
+        top: 0.55cqw;
+        right: 0.65cqw;
+        width: 13.2cqw;
+        height: 13.2cqw;
+        padding: 0.25cqw;
+        border-radius: 0.65cqw;
+        background: rgba(255, 255, 255, 0.95);
+      }
+      .qr { width: 100%; height: 100%; display: block; }
+
+      .content-card {
+        margin-top: 1.35cqw;
+        padding: 2.1cqw 2.2cqw 1.8cqw;
+        border: 0.2cqw solid rgba(255, 255, 255, 0.96);
+        border-radius: 1.25cqw;
+        background: rgba(255, 250, 253, 0.91);
+      }
+
+      .kicker {
+        margin-bottom: 1.3cqw;
+        color: #5e3c83;
+        font-size: 2.45cqw;
+        font-weight: 900;
+        line-height: 1.35;
+      }
+
+      .dynamic-title {
+        margin-bottom: 1.1cqw;
+        font-family: {{if titleFontFile}}"BiliCardTitleCustom"{{else}}{{titleFontFamily}}{{/if}};
+        font-size: 3.1cqw;
+        font-weight: {{titleFontWeight}};
+        line-height: 1.3;
+      }
+
+      .dynamic-text {
+        color: #292331;
+        font-size: 2.28cqw;
+        font-weight: {{bodyFontWeight}};
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+      }
+
+      .gallery {
+        display: grid;
+        margin-top: 1.65cqw;
+        gap: 0.85cqw;
+        overflow: hidden;
+        border-radius: 0.8cqw;
+      }
+      .gallery.count-1 { grid-template-columns: 1fr; }
+      .gallery.count-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
+      .gallery.count-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .gallery.count-many { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .dynamic-image {
+        width: 100%;
+        display: block;
+        border: 0.14cqw solid rgba(94, 70, 122, 0.18);
+        border-radius: 0.55cqw;
+        background: #eee8f5;
+      }
+      .count-1 .dynamic-image { max-height: 105cqw; object-fit: contain; }
+      .count-2 .dynamic-image { height: 43cqw; object-fit: cover; }
+      .count-3 .dynamic-image, .count-many .dynamic-image { aspect-ratio: 1; object-fit: cover; }
+
+      .forward-card {
+        margin-top: 1.7cqw;
+        padding: 1.55cqw;
+        border: 0.16cqw solid rgba(120, 91, 153, 0.23);
+        border-radius: 0.85cqw;
+        background: rgba(232, 223, 244, 0.62);
+      }
+      .forward-author { color: #7651a2; font-size: 2.2cqw; font-weight: 900; }
+      .forward-text { margin-top: 0.8cqw; font-size: 2.05cqw; line-height: 1.48; white-space: pre-wrap; }
+
+      .additional-card {
+        display: flex;
+        min-height: 7.4cqw;
+        margin-top: 1.55cqw;
+        align-items: center;
+        gap: 1.2cqw;
+        padding: 1.05cqw 1.2cqw;
+        border-radius: 0.78cqw;
+        background: rgba(244, 238, 247, 0.92);
+        box-shadow: 0 0.18cqw 0.5cqw rgba(54, 39, 75, 0.18);
+      }
+      .additional-cover { width: 6.3cqw; height: 6.3cqw; border-radius: 0.55cqw; object-fit: cover; }
+      .additional-label { color: #8154b0; font-size: 1.65cqw; font-weight: 900; }
+      .additional-title { margin-top: 0.18cqw; font-size: 2.05cqw; font-weight: 900; }
+      .additional-desc { margin-top: 0.2cqw; color: #61586c; font-size: 1.65cqw; }
+
+      .footer {
+        display: flex;
+        margin-top: 1.45cqw;
+        align-items: center;
+        justify-content: space-between;
+        color: #62566c;
+        font-size: 1.8cqw;
+        font-weight: 700;
+      }
+      .stats { display: flex; gap: 1.6cqw; }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <section class="header shadow">
+        {{if headerBackground}}<img class="header-bg" src="{{headerBackground}}" alt="" />{{/if}}
+        <div class="profile">
+          <div class="avatar-wrap">
+            {{if avatarDataUrl}}<img class="avatar" src="{{avatarDataUrl}}" alt="" />
+            {{else}}<div class="avatar-fallback">{{avatarFallback}}</div>{{/if}}
+          </div>
+          <div class="author-copy">
+            <div class="author-name">{{authorName}}</div>
+            <div class="publish-time">{{publishTime}}</div>
+          </div>
+        </div>
+        <div class="qr-wrap"><img class="qr" src="{{qrDataUrl}}" alt="二维码" /></div>
+      </section>
+
+      <section class="content-card shadow">
+        {{if kicker}}<div class="kicker">{{kicker}}</div>{{/if}}
+        {{if title}}<div class="dynamic-title">{{title}}</div>{{/if}}
+        {{if content}}<div class="dynamic-text">{{content}}</div>{{/if}}
+
+        {{if pictures.length}}
+          <div class="gallery {{galleryClass}}">
+            {{each pictures}}<img class="dynamic-image" src="{{$value}}" alt="动态图片" />{{/each}}
+          </div>
+        {{/if}}
+
+        {{if original}}
+          <div class="forward-card">
+            <div class="forward-author">@{{original.authorName}}</div>
+            {{if original.title}}<div class="dynamic-title">{{original.title}}</div>{{/if}}
+            {{if original.content}}<div class="forward-text">{{original.content}}</div>{{/if}}
+            {{if original.pictures.length}}
+              <div class="gallery {{original.galleryClass}}">
+                {{each original.pictures}}<img class="dynamic-image" src="{{$value}}" alt="转发动态图片" />{{/each}}
+              </div>
+            {{/if}}
+          </div>
+        {{/if}}
+
+        {{if additional}}
+          <div class="additional-card">
+            {{if additional.coverDataUrl}}<img class="additional-cover" src="{{additional.coverDataUrl}}" alt="" />{{/if}}
+            <div>
+              <div class="additional-label">{{additional.label}}</div>
+              <div class="additional-title">{{additional.title}}</div>
+              {{if additional.description}}<div class="additional-desc">{{additional.description}}</div>{{/if}}
+              {{if additional.detail}}<div class="additional-desc">{{additional.detail}}</div>{{/if}}
+            </div>
+          </div>
+        {{/if}}
+
+        <div class="footer">
+          <span>{{typeLabel}} · {{dynamicId}}</span>
+          <span class="stats">
+            <span>{{likeCount}}点赞</span><span>{{commentCount}}评论</span><span>{{forwardCount}}转发</span>
+          </span>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

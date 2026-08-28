@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "dynamicEnabled": true,
+  "showParsingMessage": true,
+  "parsingMessage": "解析中～",
+  "bodyFontFile": "",
+  "titleFontFile": "",
+  "bodyFontFamily": "Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif",
+  "titleFontFamily": "Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif",
+  "bodyFontWeight": 600,
+  "titleFontWeight": 900,
+  "accentColor": "#75d9ff",
+  "cardWidth": 1080,
+  "descriptionMaxLength": 100,
+  "dynamicContentMaxLength": 5000,
+  "dynamicImageLimit": 9,
+  "cooldownSeconds": 8,
+  "requestTimeoutMs": 15000
+}

@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      {{if bodyFontFile}}
+      @font-face {
+        font-family: "BiliCardBodyCustom";
+        src: url("{{@ pluResPath}}fonts/{{@ bodyFontUrl}}") format("{{bodyFontFormat}}");
+        font-display: swap;
+      }
+      {{/if}}
+      {{if titleFontFile}}
+      @font-face {
+        font-family: "BiliCardTitleCustom";
+        src: url("{{@ pluResPath}}fonts/{{@ titleFontUrl}}") format("{{titleFontFormat}}");
+        font-display: swap;
+      }
+      {{/if}}
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: transparent;
+      }
+
+      #container {
+        --accent: {{accentColor}};
+        width: {{cardWidth}}px;
+        container-type: inline-size;
+        padding: 1.8cqw;
+        color: #172230;
+        font-family: {{if bodyFontFile}}"BiliCardBodyCustom"{{else}}{{bodyFontFamily}}{{/if}};
+        font-weight: {{bodyFontWeight}};
+        background:
+          radial-gradient(circle at 8% 6%, rgba(125, 255, 245, 0.74), transparent 31%),
+          radial-gradient(circle at 93% 97%, rgba(158, 154, 255, 0.58), transparent 36%),
+          linear-gradient(145deg, #c7fff8 0%, #c8efff 45%, #d8d6ff 100%);
+        overflow: hidden;
+      }
+
+      .panel-shadow {
+        box-shadow:
+          0 0.45cqw 1cqw rgba(15, 56, 87, 0.25),
+          inset 0 0 0 0.2cqw rgba(255, 255, 255, 0.75);
+      }
+
+      .header {
+        position: relative;
+        height: 15.2cqw;
+        border-radius: 1.55cqw;
+        overflow: hidden;
+        background: linear-gradient(105deg, #94cee5, #dcecff 62%, #b8dcf7);
+      }
+
+      .header-bg {
+        position: absolute;
+        inset: -3cqw;
+        width: calc(100% + 6cqw);
+        height: calc(100% + 6cqw);
+        object-fit: cover;
+        filter: blur(1.6cqw) saturate(0.7);
+        opacity: 0.17;
+      }
+
+      .header::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, rgba(190, 234, 250, 0.93), rgba(220, 235, 255, 0.66));
+        pointer-events: none;
+      }
+
+      .profile {
+        position: absolute;
+        z-index: 2;
+        inset: 1.35cqw auto auto 2.65cqw;
+        height: 12.3cqw;
+        display: flex;
+        align-items: center;
+        gap: 2.15cqw;
+      }
+
+      .avatar-wrap {
+        position: relative;
+        flex: 0 0 auto;
+        width: 11.6cqw;
+        height: 11.6cqw;
+        border: 0.42cqw solid #fff;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #b8efff, #e9e2ff);
+        box-shadow: 0 0.38cqw 1cqw rgba(33, 73, 105, 0.3);
+      }
+
+      .avatar {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: inherit;
+      }
+
+      .avatar-fallback {
+        width: 100%;
+        height: 100%;
+        display: grid;
+        place-items: center;
+        border-radius: inherit;
+        color: #2077b4;
+        font-size: 5cqw;
+        font-weight: 900;
+      }
+
+      .badge {
+        position: absolute;
+        right: -0.25cqw;
+        bottom: -0.35cqw;
+        display: grid;
+        width: 3.8cqw;
+        height: 3.8cqw;
+        place-items: center;
+        border: 0.4cqw solid #fff;
+        border-radius: 50%;
+        color: #fff;
+        background: #ffc52a;
+        font-size: 2.2cqw;
+        line-height: 1;
+      }
+
+      .profile-copy {
+        color: #f5fbff;
+        line-height: 1.08;
+        text-shadow:
+          0 0.28cqw 0 #72b6e7,
+          0 0.45cqw 0.5cqw rgba(48, 102, 150, 0.36);
+      }
+
+      .owner-display-name {
+        max-width: 57cqw;
+        margin-bottom: 1.05cqw;
+        overflow: hidden;
+        font-family: {{if titleFontFile}}"BiliCardTitleCustom"{{else}}{{titleFontFamily}}{{/if}};
+        font-size: 5.4cqw;
+        font-weight: {{titleFontWeight}};
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .share-time {
+        font-size: 3.75cqw;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .qr-wrap {
+        position: absolute;
+        z-index: 3;
+        top: 0.7cqw;
+        right: 0.75cqw;
+        width: 13.8cqw;
+        height: 13.8cqw;
+        padding: 0.25cqw;
+        border-radius: 0.65cqw;
+        background: rgba(255, 255, 255, 0.95);
+      }
+
+      .qr {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .media {
+        position: relative;
+        height: 54.3cqw;
+        margin-top: 1.8cqw;
+        overflow: hidden;
+        border: 0.22cqw solid rgba(255, 255, 255, 0.98);
+        border-radius: 1.25cqw;
+        background: linear-gradient(145deg, #319bc0, #8cdaf2);
+      }
+
+      .cover {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+      }
+
+      .cover-fallback {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        color: rgba(255, 255, 255, 0.78);
+        font-size: 13cqw;
+        font-weight: 900;
+      }
+
+      .media::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(180deg, rgba(4, 65, 88, 0.05) 48%, rgba(5, 33, 48, 0.52) 100%),
+          linear-gradient(90deg, rgba(113, 229, 255, 0.08), transparent 55%);
+        pointer-events: none;
+      }
+
+      .type-tab {
+        position: absolute;
+        z-index: 3;
+        top: 0;
+        right: 0;
+        min-width: 12.8cqw;
+        padding: 0.8cqw 1.7cqw 1.05cqw;
+        border-radius: 0 1.1cqw 0 1.2cqw;
+        color: #061724;
+        background: rgba(129, 196, 235, 0.96);
+        box-shadow: 0 0.3cqw 0.6cqw rgba(23, 55, 78, 0.42);
+        font-size: 3cqw;
+        font-weight: 900;
+        text-align: center;
+      }
+
+      .stats {
+        position: absolute;
+        z-index: 3;
+        left: 4.1cqw;
+        bottom: 2.25cqw;
+        display: flex;
+        align-items: center;
+        gap: 1.4cqw;
+        color: #fff;
+        font-size: 2.65cqw;
+        font-weight: 900;
+        text-shadow: 0 0.24cqw 0.45cqw rgba(0, 0, 0, 0.64);
+      }
+
+      .duration {
+        padding: 0.65cqw 1.2cqw 0.7cqw;
+        border-radius: 1cqw;
+        background: rgba(16, 41, 56, 0.78);
+        line-height: 1;
+        text-shadow: none;
+      }
+
+      .stat-copy {
+        white-space: nowrap;
+      }
+
+      .footer {
+        position: relative;
+        min-height: 20.9cqw;
+        padding: 1.45cqw 1.75cqw 1.6cqw;
+        border-radius: 0 0 1.4cqw 1.4cqw;
+        background: rgba(244, 246, 255, 0.89);
+        box-shadow:
+          0 0.4cqw 0.85cqw rgba(30, 58, 88, 0.25),
+          inset 0 0 0 0.2cqw rgba(255, 255, 255, 0.86);
+      }
+
+      .video-title {
+        display: -webkit-box;
+        overflow: hidden;
+        font-family: {{if titleFontFile}}"BiliCardTitleCustom"{{else}}{{titleFontFamily}}{{/if}};
+        font-size: 3.08cqw;
+        font-weight: {{titleFontWeight}};
+        line-height: 1.28;
+        text-overflow: ellipsis;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      }
+
+      .description {
+        display: -webkit-box;
+        margin-top: 0.9cqw;
+        overflow: hidden;
+        color: #344154;
+        font-size: 2.35cqw;
+        font-weight: 600;
+        line-height: 1.24;
+        text-overflow: ellipsis;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      }
+
+      .source {
+        margin-top: 0.45cqw;
+        color: #344154;
+        font-size: 2.12cqw;
+        font-weight: 600;
+        line-height: 1.15;
+      }
+
+      .source strong {
+        color: #172638;
+        font-weight: 900;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <section class="header panel-shadow">
+        {{if coverDataUrl}}<img class="header-bg" src="{{coverDataUrl}}" alt="" />{{/if}}
+        <div class="profile">
+          <div class="avatar-wrap">
+            {{if avatarDataUrl}}
+              <img class="avatar" src="{{avatarDataUrl}}" alt="" />
+            {{else}}
+              <div class="avatar-fallback">{{avatarFallback}}</div>
+            {{/if}}
+            <span class="badge">⚡</span>
+          </div>
+          <div class="profile-copy">
+            <div class="owner-display-name">{{ownerDisplayName}}</div>
+            <div class="share-time">{{shareTime}}</div>
+          </div>
+        </div>
+        <div class="qr-wrap"><img class="qr" src="{{qrDataUrl}}" alt="二维码" /></div>
+      </section>
+
+      <section class="media panel-shadow">
+        {{if coverDataUrl}}
+          <img class="cover" src="{{coverDataUrl}}" alt="视频封面" />
+        {{else}}
+          <div class="cover-fallback">BILIBILI</div>
+        {{/if}}
+        <div class="type-tab">视频</div>
+        <div class="stats">
+          <span class="duration">{{duration}}</span>
+          <span class="stat-copy">{{viewCount}}播放 / {{danmakuCount}}弹幕 / {{likeCount}}点赞</span>
+        </div>
+      </section>
+
+      <section class="footer">
+        <div class="video-title">{{title}}</div>
+        {{if description}}<div class="description">{{description}}</div>{{/if}}
+        <div class="source">在 <strong>{{ownerName}}</strong> · 上：{{bvid}}</div>
+      </section>
+    </div>
+  </body>
+</html>
