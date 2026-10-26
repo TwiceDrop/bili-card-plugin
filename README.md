@@ -14,7 +14,8 @@
 - 动态卡片显示 UP 主、发布时间、正文、1～9 张图片、转发内容、附加预约/抽奖卡片与互动统计
 - 动态采用紫粉渐变长图 UI，复用标题和正文字体设置
 - 提供动态/开播推送 UI 服务，可供 `bili-dynamic-push` 与 `live_alert` 定时任务直接调用
-- 自动读取 `TwiceDrop/bili-dynamic-push` 已配置的登录 Cookie，降低动态接口风控概率
+- 视频和动态请求均自动读取 `TwiceDrop/bili-dynamic-push` 已配置的登录 Cookie
+- 视频接口出现 HTTP 412 等临时错误时尝试从原视频网页读取资料，并校验 BV/AV 一致性
 - 标题字体、正文字体可分别替换，修改后无需重启
 - 主人命令和锅巴面板均可配置
 - 封面与头像先下载为 Data URL 后再渲染，减少 B站防盗链导致的空图
@@ -142,7 +143,11 @@ https://t.bilibili.com/1134962906338689047
 #动态推送cookie设置 SESSDATA=xxx; bili_jct=xxx; DedeUserID=xxx
 ```
 
-本插件会在每次动态请求前只读 `data/bili-dynamic-push/config.json` 里的 `biliCookie`，无需重复保存。Cookie 只会发给 B站，不会写入卡片、日志或错误消息。发送 `#B站卡片设置` 可查看是否成功读取（只显示状态，不显示 Cookie 内容）。
+本插件会在每次视频或动态请求前只读 `data/bili-dynamic-push/config.json` 里的 `biliCookie`，无需重复保存。Cookie 只会发给 B站，不会写入卡片、日志或错误消息。请通过主人私聊配置 Cookie；发送 `#B站卡片设置` 可查看是否成功读取（只显示状态，不显示 Cookie 内容）。
+
+**视频接口出现 HTTP 412**
+
+HTTP 412 表示请求被服务端限制，更新至 1.2.2 后，视频详情接口会使用共享登录 Cookie；接口仍受限时，插件会尝试读取该视频网页的 `videoData`，并校验视频 ID、标题、封面和 UP 主资料。视频已删除、审核中或仅 UP 主可见等明确错误会直接提示。如果接口和网页都不可访问，仍需等待风控解除，或检查共享 Cookie 是否有效。
 
 ## 推送插件联动
 

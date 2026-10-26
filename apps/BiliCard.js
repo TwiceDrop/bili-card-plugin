@@ -108,7 +108,7 @@ export default class BiliCard extends plugin {
         'B站高清卡片设置',
         `状态：${config.enabled ? '开启' : '关闭'}`,
         `动态卡片：${config.dynamicEnabled ? '开启' : '关闭'}`,
-        `动态登录 Cookie：${readBiliDynamicPushCookie() ? '已从 bili-dynamic-push 读取' : '未发现'}`,
+        `B站登录 Cookie（视频/动态共用）：${readBiliDynamicPushCookie() ? '已从 bili-dynamic-push 读取' : '未发现'}`,
         `输出：${config.cardWidth}px PNG`,
         `标题字体：${config.titleFontFile || `系统字体（${config.titleFontFamily}）`}`,
         `正文字体：${config.bodyFontFile || `系统字体（${config.bodyFontFamily}）`}`,
