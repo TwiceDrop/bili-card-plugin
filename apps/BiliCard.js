@@ -12,6 +12,7 @@ import {
   truncateText,
 } from '../lib/bilibili.js'
 import { renderDynamicCardForPush } from '../lib/push.js'
+import { renderCardImage } from '../lib/render.js'
 
 const recentParses = new Map()
 
@@ -260,9 +261,7 @@ export default class BiliCard extends plugin {
     }
 
     if (!this.e.runtime?.render) throw new Error('当前 TRSS-Yunzai 没有可用的图片渲染器')
-    const image = await this.e.runtime.render('bili-card-plugin', 'bilibili/card', data, {
-      retType: 'base64',
-    })
+    const image = await renderCardImage(this.e.runtime, 'card', data)
     if (!image) throw new Error('高清卡片渲染失败，请检查 Chromium 配置')
     await this.reply(image)
   }
